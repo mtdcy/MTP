@@ -1,11 +1,13 @@
-CC = gcc 
-AR = ar
-CFLAGS = -Wall -O2
+CC ?= gcc 
+AR ?= ar
+CFLAGS ?= -Wall -O2
 
-INC = -Iinclude
-LIB = 
-PRG = mtp
-OBJ = example/HelloWorld.o src/log.o
+@echo "CC=$(CC)"
+
+INC := -Iinclude
+LIB := 
+PRG := mtp
+OBJ := example/HelloWorld.o src/log.o
 
 all : $(PRG)
 

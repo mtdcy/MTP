@@ -1,0 +1,27 @@
+CC = gcc 
+AR = ar
+CFLAGS = -Wall -O2
+
+INC = -I include
+
+LIB = 
+PRG = libmtp.a
+OBJ = src/log.o
+
+all : $(PRG)
+
+$(PRG) : $(OBJ)
+	rm -rf $(PRG)
+	$(AR) rv $(PRG) $?
+
+%.o : %.cpp
+	$(CC) $(CFLAGS) -c $< -o $@ $(INC) $(LIB)
+
+%.o : %.c
+	$(CC) $(CFLAGS) -c $< -o $@ $(INC) $(LIB)
+
+.PRONY: clean 
+
+clean:
+	@echo "Removing linked and compiled files..."
+	rm -rf $(OBJ) $(PRG)

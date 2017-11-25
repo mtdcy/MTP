@@ -33,21 +33,38 @@
  *
  **/
 
-#ifndef __mtp_types_h__
-#define __mtp_types_h__
 
-// headers for basic types:
-// int8_t int16_t int32_t int64_t 
-// uint...
-// size_t ssize_t
-// int 
-// char
-#include <stdint.h> 
-#include <sys/types.h>
+#include <mtp/log.h>
 
+#include <stdio.h>
+#include <stdarg.h>
 
-#define DISALLOW_EVILS(TYPE)    \
-    TYPE(const TYPE&);          \
-    TYPE& operator=(const TYPE&);
+#include <unistd.h>
 
-#endif // __mtp_types_h__
+#define BUF_SIZE    4096
+
+#ifdef __APPLE__
+#include <pthread.h>
+extern "C" pid_t gettid() {
+    uint64_t tid;
+    pthread_threadid_np(NULL, &tid);
+    return (pid_t)tid;
+}
+#endif
+
+void log_write_impl0(const char *tag, const char *msg) {
+    pid_t tid = gettid();
+    fprintf(stdout, "[%d][%s]: %s\n", tid, tag, msg);
+}
+
+extern "C"
+void __mtp_log_write(const char *tag, const char *fmt, ...) {
+    char buf[BUF_SIZE];
+
+    va_list ap;
+    va_start(ap, fmt);
+    vsnprintf(buf, BUF_SIZE, fmt, ap);
+    va_end(ap);
+
+    log_write_impl0(tag, buf);
+}

@@ -24,30 +24,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  **/
 
-/**
- * File: 
- * Desc:
- *
- * Changes:
- * 20171201     mtdcy   initial version
- *
- **/
 
-#ifndef __mtp_types_h__
-#define __mtp_types_h__
+#include <mtp/types.h>
+#include <mtp/log.h>
 
-// headers for basic types:
-// int8_t int16_t int32_t int64_t 
-// uint...
-// size_t ssize_t
-// int 
-// char
-#include <stdint.h> 
-#include <sys/types.h>
+#include <stdio.h>
+#include <pthread.h>
 
+void printHelloWorld() {
+    //printf("Hello World\n");
+    LOG("Hello World");
+}
 
-#define DISALLOW_EVILS(TYPE)    \
-    TYPE(const TYPE&);          \
-    TYPE& operator=(const TYPE&);
+void * threadRoutine(void *data) {
+    printHelloWorld();
+    return NULL;
+}
 
-#endif // __mtp_types_h__
+int main(int argc, char **argv) {
+    LOG("main thread");
+    pthread_t thread;
+    pthread_create(&thread, NULL, threadRoutine, NULL);
+    pthread_join(thread, NULL);
+}
